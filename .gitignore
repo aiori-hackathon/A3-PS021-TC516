@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Threadline demo event log (generated at runtime; recreated empty on start)
+data/threadline.db
+data/*.db
+data/*.db-*
+data/*.sqlite*
+
+# Temporary browser / headless-verification files
+static/_*.html
+*.png.tmp
+.chrome-profile/
+chrome-profile/
+Crashpad/
+*.crdownload
+screenshots/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local secrets (never commit)
+.env
+*.env

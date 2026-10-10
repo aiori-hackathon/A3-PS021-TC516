@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Threadline | Dialog Recovery Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <div>
+      <p class="eyebrow">PS-021 · A3-PS021-TC516 · EXPERIMENTAL LAB</p>
+      <h1>Threadline</h1>
+      <p class="lede">Keep one AI conversation consistent while it moves between agent adapters, fails, and comes back. Every recovery decision is replayed from an append-only event log.</p>
+    </div>
+    <div class="top-right">
+      <span class="badge" id="health">connecting…</span>
+      <button class="link" id="reset" title="Delete all experiments from the local SQLite log">Reset demo data</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ============ Left: experiment setup ============ -->
+    <aside class="side">
+      <section class="panel">
+        <div class="panel-head"><h2>1 · Experiment setup</h2></div>
+        <div class="pad">
+          <p class="label">Scenario preset</p>
+          <div id="scenarios" class="chips"></div>
+          <p class="label">Injected faults</p>
+          <div id="faults" class="faults"></div>
+          <button id="run" class="primary wide">Run experiment</button>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Recent experiments</h2></div>
+        <ul id="history" class="history"><li class="empty">None yet.</li></ul>
+      </section>
+    </aside>
+
+    <!-- ============ Right: results ============ -->
+    <div class="main">
+      <section class="panel workflow">
+        <div class="wf-left">
+          <div class="conv-line"><span class="muted">Conversation</span> <code id="cid">—</code> <span id="scenario-name" class="muted"></span></div>
+          <div><span id="status" class="pill neutral">no experiment</span> <span id="stale" class="hint"></span></div>
+        </div>
+        <div class="wf-actions">
+          <label class="toggle" title="Step through the replay one log entry at a time"><input id="animate" type="checkbox" checked> Animate replay</label>
+          <button id="recover" class="primary" disabled>2 · Replay &amp; recover</button>
+          <button id="deliver" disabled>Deliver delayed</button>
+          <button id="resume" disabled>3 · Resume from checkpoint</button>
+        </div>
+        <p id="notice" class="notice" hidden></p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Experiment results</h2><span id="idem" class="muted"></span></div>
+        <div id="metrics" class="metrics"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Adapter timeline</h2>
+          <div class="seg" role="tablist">
+            <button data-view="sequence" class="on">Recovered order (sequence)</button>
+            <button data-view="arrival">Arrival order (raw log)</button>
+          </div>
+        </div>
+        <div id="timeline" class="timeline"><div class="empty">Run an experiment to see the conversation move between adapters.</div></div>
+        <div class="legend">
+          <span><i class="dot web"></i>web-chat</span><span><i class="dot planner"></i>planner-agent</span><span><i class="dot tool"></i>tool-agent</span>
+          <span><i class="diamond"></i>hand-off</span><span><i class="ring reord"></i>reordered</span><span><i class="ring dup"></i>duplicate removed</span>
+          <span><i class="x"></i>conflict loser</span><span><i class="gapbox"></i>missing sequence</span><span><i class="dot sig"></i>failure signal</span>
+        </div>
+      </section>
+
+      <div class="two">
+        <section class="panel">
+          <div class="panel-head"><h2>Recovered context</h2><span class="muted" id="ctx-sub">what the next adapter receives</span></div>
+          <div id="context" class="context"><div class="empty">Recovery has not run yet.</div></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h2>Decision log</h2>
+            <label class="toggle small"><input id="only-notable" type="checkbox" checked> notable only</label></div>
+          <ol id="decisions" class="decisions"><li class="empty">Every replay decision will be explained here.</li></ol>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Event inspector</h2><span class="muted">append-only log in arrival order · click a row</span></div>
+        <div class="table-wrap">
+          <table class="events">
+            <thead><tr><th>offset</th><th>seq</th><th>adapter</th><th>kind / role</th><th>message_id</th><th>causation_id</th><th>idempotency_key</th><th>verdict</th></tr></thead>
+            <tbody id="events"><tr><td colspan="8" class="empty">No events.</td></tr></tbody>
+          </table>
+        </div>
+        <div id="detail" class="detail" hidden></div>
+      </section>
+    </div>
+  </div>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
