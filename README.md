@@ -160,34 +160,30 @@ Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · API reference: [docs/AP
 
 Team code **A3-PS021-TC516** · Problem statement **PS-021**.
 
-The names below are **editable placeholders**: real names have not been filled in yet. The role labels are temporary and may be adjusted.
+This is a two-member team. The role labels describe the current division of work.
 
 | Member | Name (edit) | Role | Owns in the code |
 |---|---|---|---|
-| Member 1 | *[Member 1 name]* | Backend, API, and SQLite persistence | `server.py`, `threadline/service.py`, `threadline/store.py` |
-| Member 2 | *[Member 2 name]* | Agent adapters, correlation, and recovery | `threadline/adapters.py`, `threadline/events.py`, `threadline/recovery.py`, `threadline/simulator.py` |
-| Member 3 | *[Member 3 name]* | Testing, experiments, dashboard, and documentation | `tests/`, `threadline/bench.py`, `static/`, `docs/` |
+| Yugraj Mangate | Yugraj Mangate | Backend, API, SQLite persistence, and project coordination | `server.py`, `threadline/service.py`, `threadline/store.py` |
+| Neha Niphade | Neha Niphade | Agent adapters, correlation, recovery, testing, dashboard, and documentation | `threadline/`, `tests/`, `static/`, `docs/` |
 
 ## Submission details (fill in before submitting)
 
 | Field | Value |
 |---|---|
-| Member 1 name | *[Member 1 name]* |
-| Member 2 name | *[Member 2 name]* |
-| Member 3 name | *[Member 3 name]* |
+| Member 1 name | Yugraj Mangate |
+| Member 2 name | Neha Niphade |
 | GitHub repository URL | <https://github.com/yugrajmangate-dev/A3-PS021-TC516> |
 | Orientation video (YouTube) URL | *[YouTube video URL]* (fill in after upload) |
 | Presentation | [docs/PRESENTATION.md](docs/PRESENTATION.md) (outline; slides to be built from it) |
-| Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, all three members) |
+| Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |
 
-| Member 1 GitHub username | `TEAM_MEMBER_1_GITHUB_USERNAME` |
-| Member 2 GitHub username | `TEAM_MEMBER_2_GITHUB_USERNAME` |
-| Member 3 GitHub username | `TEAM_MEMBER_3_GITHUB_USERNAME` |
+| Neha GitHub username | `Neha-Niphade` (collaborator) |
 
-Every remaining placeholder (`[Member 1 name]`, `[Member 2 name]`, `[Member 3 name]`, `[YouTube video URL]`) appears with exactly this spelling in README.md, [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) and [docs/PRESENTATION.md](docs/PRESENTATION.md), so a search-and-replace finds all of them.
+The YouTube URL remains the only submission placeholder until the orientation video is uploaded.
 
 ### Repository access
 
 * `aiori-hackathon` is invited as a collaborator (write access).
-* Team members are invited once their GitHub usernames replace the `TEAM_MEMBER_N_GITHUB_USERNAME` placeholders above.
+* Neha Niphade is a repository collaborator; Yugraj Mangate owns the repository.
 * Per the AIORI guideline, ownership is to be transferred to `aiori-hackathon` later, only after the destination account is confirmed and all collaborators have accepted their invitations.

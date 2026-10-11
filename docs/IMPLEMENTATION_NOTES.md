@@ -66,7 +66,7 @@ Verified in this pass: 49 tests pass; `python -m threadline.bench` reports all 8
 
 ## Final readiness check
 
-* Placeholder spelling unified across README.md, docs/DEMO_SCRIPT.md and docs/PRESENTATION.md: `[Member 1 name]`, `[Member 2 name]`, `[Member 3 name]`, `[GitHub repository URL]`, `[YouTube video URL]`. No real names or URLs are included.
+* The final team is two members: Yugraj Mangate and Neha Niphade. Their names and roles are filled in across README.md, docs/DEMO_SCRIPT.md and docs/PRESENTATION.md. The YouTube URL remains the only submission placeholder until upload.
 * Overlapping recording-checklist items (both covered the YouTube link) separated into "names + GitHub URL" and "YouTube URL after upload".
 
 ## Publication

@@ -3,13 +3,12 @@
 **Length:** planned ≈ 8 min 15 s; **hard limit: under 10 minutes** (aim to finish by 9:30). **Format:** each member appears on camera for their introduction, then speaks over a screen recording of the dashboard.
 Speaker lines are suggestions; say them in your own words. Placeholders in *[brackets]* must be replaced before recording.
 
-## Team (editable: real names not yet filled in)
+## Team
 
 | Member | Name | Role | Owns in the code |
 |---|---|---|---|
-| Member 1 | *[Member 1 name]* | Backend, API, and SQLite persistence | `server.py`, `threadline/service.py`, `threadline/store.py` |
-| Member 2 | *[Member 2 name]* | Agent adapters, correlation, and recovery | `threadline/adapters.py`, `threadline/events.py`, `threadline/recovery.py`, `threadline/simulator.py` |
-| Member 3 | *[Member 3 name]* | Testing, experiments, dashboard, and documentation | `tests/`, `threadline/bench.py`, `static/`, `docs/` |
+| Yugraj Mangate | Yugraj Mangate | Backend, API, SQLite persistence, and project coordination | `server.py`, `threadline/service.py`, `threadline/store.py` |
+| Neha Niphade | Neha Niphade | Agent adapters, correlation, recovery, testing, dashboard, and documentation | `threadline/`, `tests/`, `static/`, `docs/` |
 
 Every member's segment covers four points: **(1) their role, (2) their understanding of PS-021, (3) the proposed Threadline solution from their angle, (4) their part of the failure-and-recovery demo.**
 
@@ -19,9 +18,9 @@ Every member's segment covers four points: **(1) their role, (2) their understan
 |---|---|---|
 | 1. Role, PS-021, solution, baseline demo | Member 1 | 2:15 |
 | 2. Role, PS-021, solution, failure & recovery demo | Member 2 | 3:15 |
-| 3. Role, PS-021, solution, idempotency & evidence demo | Member 3 | 2:15 |
-| Close | Member 1 | 0:30 |
-| **Total** | | **≈ 8:15** (≈ 1:45 spare for transitions) |
+| 3. Joint idempotency & evidence demo | Neha | 1:45 |
+| Close | Yugraj | 0:30 |
+| **Total** | | **≈ 8:00** (≈ 2:00 spare for transitions) |
 
 Rehearse once with a stopwatch. If a run-through exceeds 9:30, shorten the "Solution from my angle" parts first; never cut a demo step.
 
@@ -40,10 +39,10 @@ python server.py --fresh                      # clean demo database; leave this 
 
 ---
 
-## Segment 1: Member 1, Backend, API, and SQLite persistence (≈ 2:15)
+## Segment 1: Yugraj Mangate, Backend, API, and SQLite persistence (≈ 2:15)
 
 **On camera: role + PS-021 (~40 s)**
-> "Hi, I'm *[Member 1 name]*. I built the backend, the API and the SQLite persistence of Threadline.
+> "Hi, I'm Yugraj Mangate. I built the backend, the API and the SQLite persistence of Threadline.
 >
 > My understanding of PS-021: a modern AI assistant is not one program. A user types in a web chat, a planner agent decides what to do, and a tool agent calls real systems. Each runs as a separate service with its own protocol. Messages between them can time out, be retried, arrive twice, arrive late, arrive out of order, or get lost. If that happens during a hand-off, the conversation breaks: context is lost, or the user gets the same answer twice. PS-021 asks us to keep the dialog correlated and recoverable as it moves across adapters."
 
@@ -56,10 +55,10 @@ python server.py --fresh                      # clean demo database; leave this 
 2. Click **2 · Replay & recover**.
    > "Recovery reads the log back. Status *consistent*: nothing had to be fixed. The timeline shows the conversation crossing three adapters, and the experiment results show the counts and how long recovery took."
 
-## Segment 2: Member 2, Agent adapters, correlation, and recovery (≈ 3:15)
+## Segment 2: Neha Niphade, Agent adapters, correlation, and recovery (≈ 3:15)
 
 **On camera: role + PS-021 (~35 s)**
-> "Hi, I'm *[Member 2 name]*. I worked on the agent adapters, the correlation model and the recovery engine.
+> "Hi, I'm Neha Niphade. I worked on the agent adapters, the correlation model and the recovery engine.
 >
 > For me, the core of PS-021 is identity: if you can't tell which message is which, and what it answers, you can't recover anything. Timestamps and adapter names are not enough, because clocks differ and retries come from different places."
 
@@ -79,10 +78,10 @@ python server.py --fresh                      # clean demo database; leave this 
 4. Click **3 · Resume from checkpoint** → **2 · Replay & recover**.
    > "The tool agent resumes from the recovered checkpoint at sequence 8, linked by causation to the last good message. The dialog is now complete."
 
-## Segment 3: Member 3, Testing, experiments, dashboard, and documentation (≈ 2:15)
+## Segment 3: Neha Niphade, Testing, experiments, dashboard, and documentation (≈ 1:45)
 
 **On camera: role + PS-021 (~35 s)**
-> "Hi, I'm *[Member 3 name]*. I handled testing, the experiments, the dashboard and the documentation.
+> "I also handled testing, the experiments, the dashboard and the documentation.
 >
 > I see PS-021 as an *experimental* problem. It is not enough to claim recovery works; we have to show, repeatably, what happens under each kind of failure, and explain every decision."
 
@@ -113,11 +112,11 @@ python -m unittest discover -s tests -t .
 
 ### Recording checklist
 
-- [ ] Member names and roles filled in the team table above, or clearly left as the editable *[Member 1 name]*, *[Member 2 name]*, *[Member 3 name]* placeholders if recording a dry run
+- [ ] Yugraj Mangate and Neha Niphade names and roles are filled in above
 - [ ] `python -m unittest discover -s tests -t .` ends with `OK` (49 tests) on the recording machine
 - [ ] Server started with `python server.py --fresh`; *Recent experiments* is empty at the start
-- [ ] Every member is visible on camera and clearly audible, and covers role, PS-021, the Threadline solution, and their demo part
+- [ ] Both members are visible on camera and clearly audible, and cover role, PS-021, the Threadline solution, and their demo part
 - [ ] Final video is under 10 minutes (planned ≈ 8:15)
-- [ ] README.md → *Team* and *Submission details* completed: `[Member 1 name]`, `[Member 2 name]` and `[Member 3 name]` replaced (the GitHub URL is already filled in)
+- [ ] README.md → *Team* and *Submission details* completed for Yugraj Mangate and Neha Niphade
 - [ ] After the YouTube upload (done later by the team), `[YouTube video URL]` replaced in README.md and docs/PRESENTATION.md
 - [ ] Server stopped with Ctrl+C after recording

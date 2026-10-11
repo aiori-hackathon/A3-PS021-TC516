@@ -51,9 +51,8 @@ Simulated adapters; scripted resume; single-node SQLite; permanent gaps need an 
 Next: real connectors (WebSocket / LLM HTTP / JSON-RPC-MCP), outbox + redelivery, snapshots, seeded random fault campaigns, signed envelopes, distributed sequencer.
 
 **10. Team & thanks**
-- Member 1 (*[Member 1 name]*): Backend, API, and SQLite persistence
-- Member 2 (*[Member 2 name]*): Agent adapters, correlation, and recovery
-- Member 3 (*[Member 3 name]*): Testing, experiments, dashboard, and documentation
+- Member 1 (Yugraj Mangate): Backend, API, SQLite persistence, and project coordination
+- Member 2 (Neha Niphade): Agent adapters, correlation, recovery, testing, dashboard, and documentation
 
 GitHub: https://github.com/yugrajmangate-dev/A3-PS021-TC516 · Orientation video: *[YouTube video URL]* · Q&A.
 (Names and links are placeholders; copy the final values from README.md → *Submission details*.)
@@ -63,8 +62,8 @@ GitHub: https://github.com/yugrajmangate-dev/A3-PS021-TC516 · Orientation video
 |---|---|
 | 1–3 (title, problem, insight) | Member 1 |
 | 4–6 (correlation model, architecture, recovery pipeline) | Member 2 |
-| 7 (live demo) | Member 3 drives, Member 2 narrates the recovery decisions |
-| 8–10 (results, limitations, team) | Member 3, then Member 1 closes |
+| 7 (live demo) | Neha drives, Yugraj narrates the recovery decisions |
+| 8–10 (results, limitations, team) | Neha, then Yugraj closes |
 
 ### Likely evaluator questions
 
