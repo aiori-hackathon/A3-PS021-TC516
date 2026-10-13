@@ -77,6 +77,7 @@ def make_handler(app):
             if size > MAX_BODY:
                 raise ApiError(413, "body_too_large", f"Body exceeds {MAX_BODY} bytes.")
             raw = self.rfile.read(size) if size else b""
+            self.body_read = True
             if not raw.strip():
                 return {}
             try:
@@ -84,8 +85,21 @@ def make_handler(app):
             except (ValueError, UnicodeDecodeError) as exc:
                 raise ApiError(400, "invalid_json", f"Request body is not valid JSON: {exc}")
 
+        def discard_unread_body(self):
+            # Closing a socket with unread input resets the connection, and the
+            # client can lose the response (e.g. a JSON 405 for PUT with a body).
+            if self.body_read:
+                return
+            try:
+                size = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                return
+            if 0 < size <= MAX_BODY:
+                self.rfile.read(size)
+
         def dispatch(self, verb):
             path = urlparse(self.path).path
+            self.body_read = False
             try:
                 if not path.startswith("/api/"):
                     if verb == "GET":
@@ -109,6 +123,8 @@ def make_handler(app):
             except Exception:  # never drop the connection without a JSON answer
                 traceback.print_exc()
                 return self.send_json({"error": {"code": "internal_error", "message": "Unexpected server error."}}, 500)
+            finally:
+                self.discard_unread_body()
 
         def serve_static(self, path):
             filename = "index.html" if path in ("", "/") else path.lstrip("/")

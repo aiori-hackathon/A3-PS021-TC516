@@ -32,7 +32,7 @@ The environment is Windows with Python 3.11 (3.10+ required). If `python` is not
 python server.py                                   # http://localhost:8080, log at data/threadline.db
 python server.py --fresh                           # wipe demo data first (use before recording)
 python server.py --port 9000 --db :memory:         # other port / throwaway log
-python -m unittest discover -s tests -t . -v       # full suite (49 tests, < 1 s)
+python -m unittest discover -s tests -t . -v       # full suite (50 tests, about 1.5 s)
 python -m unittest tests.test_recovery -v          # one module
 python -m threadline.bench                         # all 8 scenarios end-to-end; add --json for machine output
 vercel deploy --prod                               # redeploy the hosted demo (this folder is linked via .vercel/)
@@ -117,7 +117,7 @@ This is the output of `python -m threadline.bench`. After any change, the counts
 
 ## Making changes
 
-- **After every change,** run the full test suite, which must stay all green (49 tests today). For behaviour changes, also run `python -m threadline.bench`. Add a test for any new behaviour: engine logic goes in `test_recovery.py` with `helpers.ev()` fixtures, which use no clocks or randomness.
+- **After every change,** run the full test suite, which must stay all green (50 tests today). For behaviour changes, also run `python -m threadline.bench`. Add a test for any new behaviour: engine logic goes in `test_recovery.py` with `helpers.ev()` fixtures, which use no clocks or randomness.
 - **New fault or scenario:** add it to `simulator.FAULTS` (dict order is the canonical fault order) and `SCENARIOS`, apply it in `plan()`, then update `test_every_scenario_matches_documented_outcome`, the README scenario table, the baseline above and the docs.
 - **New adapter:** subclass `Adapter` in `adapters.py`, carry all five correlation fields in `encode`/`decode`, register it in `ADAPTERS`, and keep the unused `events.ADAPTERS` tuple in sync. Round-trip tests live in `test_components.py`.
 - **New API route:** add a `(verb, pattern, fn)` entry to `routes` in `server.py`. Raise `ApiError(status, code, message, details)` for errors (never bare exceptions) so clients always get a JSON `{"error": {...}}` body. Document the route in `docs/API.md` and test it in `test_api.py`.

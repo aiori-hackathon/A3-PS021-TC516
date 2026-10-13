@@ -44,7 +44,7 @@ Chaos run → replay (gap, blocked) → deliver late → replay → resume → r
 | Split-brain | conflict → HANDOFF_OWNERSHIP | complete, flagged |
 | Chaos | incomplete | complete after deliver + resume |
 
-All recoveries idempotent; replay ≈ 0.2–1 ms for these logs; 49 automated tests.
+All recoveries idempotent; replay ≈ 0.2–1 ms for these logs; 50 automated tests.
 
 **9. Limitations & future work**
 Simulated adapters; scripted resume; single-node SQLite; permanent gaps need an outbox/redelivery path.

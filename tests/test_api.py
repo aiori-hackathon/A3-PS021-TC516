@@ -89,6 +89,13 @@ class Api(unittest.TestCase):
                 got_status, payload = self.call(method, path, body, raw)
                 self.assertEqual((got_status, payload["error"]["code"]), (status, code))
 
+    def test_unread_body_does_not_reset_connection(self):
+        # The 405 is sent without reading the body. Unless the server drains it, closing the
+        # socket resets the connection and the client loses the answer (about 1 in 6 at this size).
+        for _ in range(20):
+            status, payload = self.call("PUT", "/api/experiments", raw=b"x" * 900_000)
+            self.assertEqual((status, payload["error"]["code"]), (405, "method_not_allowed"))
+
     def test_head_is_rejected_without_body(self):
         req = urllib.request.Request(self.base + "/api/health", method="HEAD")
         with self.assertRaises(urllib.error.HTTPError) as ctx:

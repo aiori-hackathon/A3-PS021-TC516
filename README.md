@@ -36,7 +36,7 @@ The default event log is `data/threadline.db` (created automatically, ignored by
 python -m unittest discover -s tests -t . -v
 ```
 
-49 tests cover the recovery engine, the envelope and idempotency rules, adapter protocol round-trips, the append-only store, every scenario end-to-end, and the HTTP API.
+50 tests cover the recovery engine, the envelope and idempotency rules, adapter protocol round-trips, the append-only store, every scenario end-to-end, and the HTTP API.
 
 ### Run the experiment table (no browser needed)
 

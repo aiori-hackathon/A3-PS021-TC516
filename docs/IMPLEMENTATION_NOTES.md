@@ -85,3 +85,9 @@ Verified in this pass: 49 tests pass; `python -m threadline.bench` reports all 8
 | `handler` is declared with a `class` statement, not assigned | Vercel's build only recognises a Python entrypoint by `class handler` or `app = ...`. With `handler = make_handler(...)`, the first deployment shipped only the static site and every `/api/*` route returned 404 |
 
 Verified on the live URL: every scenario's full operator workflow (run → recover → deliver → resume → recover twice) matches `python -m threadline.bench`, re-runs report `identical`, and source paths such as `/server.py` return 404.
+
+## Fix: lost error responses for requests with an unread body
+
+`test_errors_are_json` failed about once in ten runs with `ConnectionAbortedError` on `PUT /api/experiments`. The server answered 405 without reading the request body. Closing a socket that still has unread input sends a TCP reset, and the client can lose the response before reading it. This affected any request whose body the server never read: wrong-verb requests, a `GET` with a body, and errors raised before routing. With a 900 KB body, about 1 response in 6 was lost.
+
+`server.py` now drains an unread body (up to `MAX_BODY`) after every response. `test_unread_body_does_not_reset_connection` sends 20 such requests. On the old code it fails about 97% of the time; on the fixed code it passes every time. The suite has 50 tests.
