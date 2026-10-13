@@ -2,7 +2,7 @@
 
 **Dialog correlation and recovery across agent adapters**: AIORI-3 hackathon, team **A3-PS021-TC516**, problem statement **PS-021: Experimental Dialog Correlation and Recovery Across Agent Adapters**.
 
-Repository: <https://github.com/yugrajmangate-dev/A3-PS021-TC516> · Orientation video: *[YouTube video URL]*
+Repository: <https://github.com/yugrajmangate-dev/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: *[YouTube video URL]*
 
 Threadline keeps one AI conversation consistent while it moves between agent adapters that speak different protocols (a web chat widget, an LLM planner agent, a tool-execution agent). Every message is correlated with a stable `conversation_id`, a unique `message_id`, a `sequence` number, a `causation_id` and a deterministic `idempotency_key`, and every delivery is written to an append-only SQLite event log. When things go wrong (adapter timeouts, interrupted hand-offs, duplicates, delays, lost or out-of-order messages, split-brain conflicts), Threadline **replays the log** to rebuild the context, shows exactly why each event was accepted or rejected, and resumes the dialog from a safe checkpoint.
 
@@ -45,6 +45,18 @@ python -m threadline.bench
 ```
 
 This runs every scenario through the full workflow (run → recover → deliver late → resume → recover twice) and prints the results table used in the presentation.
+
+### Deploy to Vercel
+
+The hosted demo runs at **<https://threadline-brown.vercel.app>** (Vercel project `threadline`).
+
+```powershell
+vercel deploy --prod
+```
+
+`vercel.json` sends every `/api/*` request to one Python function, `api/index.py`, which wraps the same `server.make_handler()` used locally. The CDN serves the dashboard straight from `static/`. Nothing else in the repository is published.
+
+Vercel functions have no persistent disk, so the hosted event log lives in the function's temp directory. It survives while an instance stays warm and is empty again after a cold start (for example, after a period with no traffic). Run locally for a durable log.
 
 ---
 
@@ -145,6 +157,7 @@ Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · API reference: [docs/AP
 - **Permanent gaps stay open.** There is no "request redelivery from the adapter outbox" or operator "acknowledge gap" action yet.
 - **No authentication / tenancy.** The server binds to `127.0.0.1` by default; do not expose it publicly.
 - **Fault positions are fixed** (by design, for reproducible results), not randomised.
+- **Hosted demo state is temporary.** On Vercel the event log is per function instance and is lost on a cold start; it is not shared if Vercel runs several instances at once.
 - Recovery duration is wall-clock for a tiny log (~0.2–1 ms) and is not a performance benchmark.
 
 ## Future work
@@ -174,6 +187,7 @@ This is a two-member team. The role labels describe the current division of work
 | Member 1 name | Yugraj Mangate |
 | Member 2 name | Neha Niphade |
 | GitHub repository URL | <https://github.com/yugrajmangate-dev/A3-PS021-TC516> |
+| Live demo URL | <https://threadline-brown.vercel.app> (temporary demo data) |
 | Orientation video (YouTube) URL | *[YouTube video URL]* (fill in after upload) |
 | Presentation | [https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk](https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk) |
 | Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |

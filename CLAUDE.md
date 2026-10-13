@@ -6,12 +6,13 @@ Threadline is a dialog correlation and recovery lab for the **AIORI-3 hackathon*
 
 ## Team and submission
 
-| | |
+| Item | Value |
 |---|---|
 | Team | Team Nexora · team code **A3-PS021-TC516** |
-| Repository | https://github.com/yugrajmangate-dev/A3-PS021-TC516 (owner `yugrajmangate-dev`) |
-| Hackathon guidelines | https://portal.aiori.in/aiori-3/hackathon-guideline/ |
-| Team working doc | https://docs.google.com/document/d/1sVP_knz2Lf_Z85Vum_5NgstbedUjxo1ng-CJvaTce5Y/edit?tab=t.0 |
+| Repository | <https://github.com/yugrajmangate-dev/A3-PS021-TC516> (owner `yugrajmangate-dev`) |
+| Live demo | <https://threadline-brown.vercel.app> (Vercel project `threadline`, connected to the GitHub repo) |
+| Hackathon guidelines | <https://portal.aiori.in/aiori-3/hackathon-guideline/> |
+| Team working doc | <https://docs.google.com/document/d/1sVP_knz2Lf_Z85Vum_5NgstbedUjxo1ng-CJvaTce5Y/edit?tab=t.0> |
 
 | Member | GitHub | Role | Owns |
 |---|---|---|---|
@@ -34,6 +35,7 @@ python server.py --port 9000 --db :memory:         # other port / throwaway log
 python -m unittest discover -s tests -t . -v       # full suite (49 tests, < 1 s)
 python -m unittest tests.test_recovery -v          # one module
 python -m threadline.bench                         # all 8 scenarios end-to-end; add --json for machine output
+vercel deploy --prod                               # redeploy the hosted demo (this folder is linked via .vercel/)
 ```
 
 Environment variables: `HOST`, `PORT`, `THREADLINE_DB`, and `THREADLINE_ACCESS_LOG=1` (prints request lines, which are silent by default). The server binds `127.0.0.1` and has no authentication, so treat `--host 0.0.0.0` as an explicit opt-in. No CI is configured; run the tests locally.
@@ -64,6 +66,7 @@ web-chat (websocket-json)   planner-agent (http-agent)   tool-agent (json-rpc-2.
 | `threadline/simulator.py` | `SCRIPT` (9-step dialog), `FAULTS`, `SCENARIOS`, `plan()`, `continuation()` |
 | `threadline/service.py` | `Threadline` gateway: `ingest`, `run_experiment`, `recover`, `deliver_pending`, `resume`, `ingest_external`. `ApiError` |
 | `threadline/bench.py` | Runs every scenario through run → recover → deliver → resume → recover ×2 |
+| `api/index.py`, `vercel.json`, `.vercelignore` | Vercel deployment. `/api/*` goes to one Python function wrapping `server.make_handler()`; the CDN serves `static/`. The log is in the function's temp dir (per instance, lost on cold start) |
 | `tests/` | `test_recovery.py` (engine on hand-built logs), `test_components.py`, `test_scenarios.py`, `test_api.py`. `helpers.py` provides `ev()`, `linear()`, `renumber()` fixtures |
 | `docs/` | `ARCHITECTURE.md`, `API.md`, `IMPLEMENTATION_NOTES.md` (decision log), `DEMO_SCRIPT.md`, `PRESENTATION.md` |
 
@@ -77,6 +80,7 @@ web-chat (websocket-json)   planner-agent (http-agent)   tool-agent (json-rpc-2.
 6. **No duplicate assistant responses.** First arrival wins. `resume()` stops chaining as soon as an append is not `processed`.
 7. **The simulator is deterministic by design.** Fault positions are fixed and message ids are derived. Tests and docs assert exact counts, so changing `SCRIPT` or fault positions also means updating `test_scenarios.py`, the README tables and `docs/`.
 8. **Hold `store.lock` around multi-step operations.** It is an `RLock` and the server is multi-threaded. Existing service methods wrap each read-replay-append sequence in `with self.store.lock:`. Do the same for new ones.
+9. **Keep the Vercel entry detectable.** `api/index.py` must keep its `class handler(...)` statement. Vercel's build skips a file whose `handler` is only assigned (`handler = ...`): the static site still deploys, but every `/api/*` route returns 404. `make_handler(app)` is shared with `server.py`, so a signature change there needs the same change in `api/index.py`.
 
 ## Correlation model
 
@@ -125,4 +129,4 @@ This is the output of `python -m threadline.bench`. After any change, the counts
 
 These are by design for the hackathon; don't "fix" them unprompted.
 
-The adapters are simulated in-process, so no real LLM, WebSocket or JSON-RPC endpoint is called. `resume` replays the scripted continuation and refuses `external` conversations with 409 `no_simulated_adapter`. Sequence leasing at hand-off is an assumption, not an implementation. There is one SQLite file and one process lock. Permanent gaps stay open: there is no outbox redelivery or "acknowledge gap" action. Fault positions are fixed rather than random. Future work (outbox redelivery, snapshots, randomised campaigns, signed envelopes, PostgreSQL, distributed sequencer) is listed in the README.
+The adapters are simulated in-process, so no real LLM, WebSocket or JSON-RPC endpoint is called. The hosted Vercel demo keeps its log only while a function instance is warm. `resume` replays the scripted continuation and refuses `external` conversations with 409 `no_simulated_adapter`. Sequence leasing at hand-off is an assumption, not an implementation. There is one SQLite file and one process lock. Permanent gaps stay open: there is no outbox redelivery or "acknowledge gap" action. Fault positions are fixed rather than random. Future work (outbox redelivery, snapshots, randomised campaigns, signed envelopes, PostgreSQL, distributed sequencer) is listed in the README.

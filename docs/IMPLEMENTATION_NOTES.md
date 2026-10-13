@@ -73,3 +73,15 @@ Verified in this pass: 49 tests pass; `python -m threadline.bench` reports all 8
 
 * Git repository initialised on branch `main`; `.gitignore` excludes Python caches, the generated demo database (`data/threadline.db`), temporary headless-browser files, editor/OS files and `.env`.
 * Public GitHub repository: https://github.com/yugrajmangate-dev/A3-PS021-TC516. The `[GitHub repository URL]` placeholder was replaced with this URL in README.md, docs/DEMO_SCRIPT.md and docs/PRESENTATION.md. `[YouTube video URL]` and the member-name placeholders remain until the team supplies them.
+
+## Hosted demo on Vercel
+
+| Change | Reason |
+|---|---|
+| `api/index.py` wraps the existing `server.make_handler()` as Vercel's `handler` class | One code path for local and hosted runs; no framework and no third-party packages needed |
+| `vercel.json`: `/api/*` goes to the function, and `static/` is the output directory | The CDN serves the dashboard. Only `static/` is published as files, so the source tree is not exposed |
+| `.vercelignore` excludes the local demo database, `tests/` and `docs/` | Not needed at runtime; keeps local demo data out of the upload |
+| The event log is in the function's temp directory | Vercel functions have no persistent disk. The log lasts while an instance is warm and is empty after a cold start. This is documented as a limitation rather than replaced by an external database, which would break the standard-library-only rule |
+| `handler` is declared with a `class` statement, not assigned | Vercel's build only recognises a Python entrypoint by `class handler` or `app = ...`. With `handler = make_handler(...)`, the first deployment shipped only the static site and every `/api/*` route returned 404 |
+
+Verified on the live URL: every scenario's full operator workflow (run → recover → deliver → resume → recover twice) matches `python -m threadline.bench`, re-runs report `identical`, and source paths such as `/server.py` return 404.
