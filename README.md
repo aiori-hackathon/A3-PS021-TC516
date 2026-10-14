@@ -122,7 +122,7 @@ The dashboard and API use exactly these terms.
 | `static/` | Operator dashboard (vanilla JS, no build step) |
 | `tests/` | `unittest` suite with deterministic fixtures |
 
-Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · API reference: [docs/API.md](docs/API.md) · Design decisions: [docs/IMPLEMENTATION_NOTES.md](docs/IMPLEMENTATION_NOTES.md) · Slides: [docs/PRESENTATION.md](docs/PRESENTATION.md)
+Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · API reference: [docs/API.md](docs/API.md) · Design decisions: [docs/IMPLEMENTATION_NOTES.md](docs/IMPLEMENTATION_NOTES.md) · Slides: [https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk](https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk)
 
 ## Domain guarantees (and where they are enforced)
 
@@ -175,7 +175,7 @@ This is a two-member team. The role labels describe the current division of work
 | Member 2 name | Neha Niphade |
 | GitHub repository URL | <https://github.com/yugrajmangate-dev/A3-PS021-TC516> |
 | Orientation video (YouTube) URL | *[YouTube video URL]* (fill in after upload) |
-| Presentation | [docs/PRESENTATION.md](docs/PRESENTATION.md) (outline; slides to be built from it) |
+| Presentation | [https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk](https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk) |
 | Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |
 
 | Neha GitHub username | `Neha-Niphade` (collaborator) |
