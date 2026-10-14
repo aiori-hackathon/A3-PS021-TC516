@@ -189,7 +189,7 @@ This is a two-member team. The role labels describe the current division of work
 | GitHub repository URL | <https://github.com/yugrajmangate-dev/A3-PS021-TC516> |
 | Live demo URL | <https://threadline-brown.vercel.app> (temporary demo data) |
 | Orientation video (YouTube) URL | <https://youtu.be/4IXSzTUrEOA> |
-| Presentation (PDF) | [docs/Threadline-AIORI3-PS021.pdf](docs/Threadline-AIORI3-PS021.pdf) (13 slides, AIORI proposed structure; editable [.pptx](docs/Threadline-AIORI3-PS021.pptx), outline in [docs/PRESENTATION.md](docs/PRESENTATION.md); also on [Google Drive](https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk)) |
+| Presentation (PDF) | [docs/Threadline-AIORI3-PS021.pdf](docs/Threadline-AIORI3-PS021.pdf) (13 slides, AIORI proposed structure; editable [.pptx](docs/Threadline-AIORI3-PS021.pptx), outline in [docs/PRESENTATION.md](docs/PRESENTATION.md); also on [Google Drive](https://drive.google.com/file/d/19Ynhj6n3OldZyBsFA8Yh84paMBQFU-A6/view?usp=sharing) |
 | Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |
 | Neha GitHub username | `Neha-Niphade` (collaborator) |
 
