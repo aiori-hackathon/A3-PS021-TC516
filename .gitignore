@@ -33,3 +33,7 @@ desktop.ini
 *.env
 
 .vercel
+
+# Local Claude Code notes (not part of the submission)
+CLAUDE.md
+.claude/
