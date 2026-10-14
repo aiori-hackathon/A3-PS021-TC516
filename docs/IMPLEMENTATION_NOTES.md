@@ -91,3 +91,8 @@ Verified on the live URL: every scenario's full operator workflow (run → recov
 `test_errors_are_json` failed about once in ten runs with `ConnectionAbortedError` on `PUT /api/experiments`. The server answered 405 without reading the request body. Closing a socket that still has unread input sends a TCP reset, and the client can lose the response before reading it. This affected any request whose body the server never read: wrong-verb requests, a `GET` with a body, and errors raised before routing. With a 900 KB body, about 1 response in 6 was lost.
 
 `server.py` now drains an unread body (up to `MAX_BODY`) after every response. `test_unread_body_does_not_reset_connection` sends 20 such requests. On the old code it fails about 97% of the time; on the fixed code it passes every time. The suite has 50 tests.
+
+## Submission
+
+* Orientation video uploaded: https://youtu.be/kQrdWOszweA. Linked from README.md and docs/PRESENTATION.md.
+* Presentation PDF (AIORI proposed structure, 13 slides) committed as `docs/Threadline-AIORI3-PS021.pdf`, with the editable `.pptx`.

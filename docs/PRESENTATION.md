@@ -1,5 +1,7 @@
 # Presentation outline: Threadline (PS-021 · A3-PS021-TC516)
 
+The submitted deck is [Threadline-AIORI3-PS021.pdf](Threadline-AIORI3-PS021.pdf) (13 slides in the AIORI proposed structure; editable [.pptx](Threadline-AIORI3-PS021.pptx)). This file is the original talk outline.
+
 10 slides, ~8 minutes + live demo. Speaker notes in *italics*.
 
 **1. Title**
@@ -54,8 +56,7 @@ Next: real connectors (WebSocket / LLM HTTP / JSON-RPC-MCP), outbox + redelivery
 - Member 1 (Yugraj Mangate): Backend, API, SQLite persistence, and project coordination
 - Member 2 (Neha Niphade): Agent adapters, correlation, recovery, testing, dashboard, and documentation
 
-GitHub: https://github.com/yugrajmangate-dev/A3-PS021-TC516 · Orientation video: *[YouTube video URL]* · Q&A.
-(Names and links are placeholders; copy the final values from README.md → *Submission details*.)
+GitHub: https://github.com/yugrajmangate-dev/A3-PS021-TC516 · Orientation video: https://youtu.be/kQrdWOszweA · Q&A.
 
 ### Suggested speaker split
 | Slides | Speaker |
