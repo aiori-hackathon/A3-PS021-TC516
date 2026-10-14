@@ -190,3 +190,17 @@ pre { margin: 0; background: var(--panel-2); border: 1px solid var(--line-soft);
   .top-right { align-items: flex-start; }
   .wf-actions button { flex: 1 1 auto; }
 }
+
+/* Random fault campaign */
+.camp-intro { color: var(--muted); font-size: 13px; margin: 0 0 12px; max-width: 900px; }
+.camp-form { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 12px; }
+.camp-form label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.camp-form input { width: 110px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; font: inherit; font-size: 13px; }
+.camp-faults { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+table.camp { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.camp th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 11px; text-transform: uppercase; letter-spacing: .6px; white-space: nowrap; }
+table.camp td { padding: 8px 10px; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+table.camp tr.ours td { background: rgba(63, 185, 80, .07); font-weight: 600; }
+table.camp td.good { color: var(--ok); }
+table.camp td.bad { color: var(--bad); }
+.camp-proof { font-size: 12.5px; color: var(--muted); margin: 10px 0 0; }

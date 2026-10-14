@@ -13,7 +13,7 @@ Every error has the same shape and a meaningful HTTP status:
 
 | Status | Codes |
 |---|---|
-| 400 | `invalid_json`, `invalid_body`, `invalid_length`, `unknown_scenario`, `unknown_fault`, `invalid_faults`, `invalid_envelope`, `unknown_adapter`, `conversation_mismatch` |
+| 400 | `invalid_json`, `invalid_body`, `invalid_length`, `unknown_scenario`, `unknown_fault`, `invalid_faults`, `invalid_envelope`, `unknown_adapter`, `conversation_mismatch`, `invalid_trials`, `invalid_seed` |
 | 404 | `not_found`, `conversation_not_found` |
 | 405 | `method_not_allowed` (the message names the allowed verb; `HEAD` gets an empty 405) |
 | 409 | `not_resumable`, `no_simulated_adapter` |
@@ -35,6 +35,7 @@ Every error has the same shape and a meaningful HTTP status:
 | POST | `/api/conversations/{id}/events` | Ingest one external canonical envelope |
 | GET | `/api/conversations/{id}/recoveries` | Audit trail of recovery runs |
 | POST | `/api/reset` | Delete all demo data |
+| POST | `/api/campaign` | Run a seeded random fault campaign (Threadline vs. naive recovery) |
 
 ---
 
@@ -123,3 +124,21 @@ Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/conversations/conv
 ```
 
 Response: `{ "outcome": "accepted" | "duplicate" | "conflict", "processed": true|false, "event": {...} }`. Every delivery is appended (the log is evidence); `processed` tells the caller whether to act on it.
+
+### POST /api/campaign
+
+Runs the seeded random fault campaign in memory (nothing is written to the event log). Body: `{"trials": 500, "seed": 2026}`; both are optional. `trials` must be an integer from 1 to 2000, and `seed` an integer from 1 to 2147483647; anything else returns 400 `invalid_trials` or `invalid_seed`. The same seed always returns the same numbers.
+
+```json
+{ "trials": 500, "seed": 2026,
+  "faults_injected": {"redeliveries": 686, "retries": 281, "delayed": 1791, "lost": 269},
+  "trials_with_loss": 221,
+  "strategies": {
+    "threadline":      {"exact": 500, "duplicate_replies": 0, "order_errors": 0, "loss_surfaced": 221, "silent_loss": 0, "false_alarm": 0},
+    "naive_arrival":   {"exact": 55, "duplicate_replies": 281, "...": "..."},
+    "naive_timestamp": {"...": "..."} },
+  "threadline_deterministic": 500, "threadline_order_invariant": 500,
+  "parameters": {"p_redeliver": 0.15, "...": "..."}, "median_replay_ms": 0.08 }
+```
+
+Metric definitions are in [EVALUATION.md](EVALUATION.md).

@@ -15,13 +15,14 @@ import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
-from threadline import __version__
+from threadline import __version__, campaign
 from threadline.service import ApiError, Threadline
 from threadline.store import EventStore
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC = os.path.join(ROOT, "static")
 MAX_BODY = 1_000_000
+MAX_TRIALS = 2000  # keeps one campaign request under about 2 s
 CONTENT_TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
                  ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml"}
 CONV = r"/api/conversations/(?P<cid>[A-Za-z0-9_.:-]{1,80})"
@@ -42,6 +43,7 @@ def make_handler(app):
         ("POST", CONV + r"/resume", lambda m, b: app.resume(m["cid"])),
         ("GET", CONV + r"/recoveries", lambda m, b: {"recoveries": app.store.recoveries(m["cid"])}),
         ("POST", r"/api/reset", lambda m, b: reset()),
+        ("POST", r"/api/campaign", lambda m, b: run_campaign(b)),
     ]
     compiled = [(verb, re.compile(pattern + r"/?$"), fn) for verb, pattern, fn in routes]
 
@@ -52,6 +54,16 @@ def make_handler(app):
         if faults is None and body.get("inject_interruption"):  # prototype compatibility
             faults = ["adapter_timeout"]
         return app.run_experiment(body.get("scenario"), faults)
+
+    def run_campaign(body):
+        if not isinstance(body, dict):
+            raise ApiError(400, "invalid_body", "Body must be a JSON object.")
+        trials, seed = body.get("trials", 500), body.get("seed", 2026)
+        for name, value, high in (("trials", trials, MAX_TRIALS), ("seed", seed, 2**31 - 1)):
+            if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= high:
+                raise ApiError(400, "invalid_" + name, f"{name} must be an integer from 1 to {high}.",
+                               {name: value})
+        return campaign.run(trials, seed)
 
     def reset():
         app.store.reset()

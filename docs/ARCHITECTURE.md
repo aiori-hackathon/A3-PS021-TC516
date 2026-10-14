@@ -28,6 +28,8 @@ A single user conversation is handled by several agent adapters: a web chat fron
           JSON API (server.py) → Operator dashboard (static/)
 ```
 
+The random fault campaign (`campaign.py`) calls the same `replay()` directly on in-memory logs. It skips the gateway and the SQLite log, so thousands of trials run in about a second. See [EVALUATION.md](EVALUATION.md).
+
 Supporting tables: `in_flight` (messages the simulated network is holding back), `recoveries` (audit trail of every recovery run, with its context hash, so idempotency can be checked).
 
 ## 3. The canonical envelope

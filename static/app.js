@@ -546,6 +546,47 @@ async function resetDemo() {
   });
 }
 
+// ----------------------------------------------------------- fault campaign
+const CAMP_LABEL = { threadline: "Threadline (replay)", naive_arrival: "Naive: arrival order", naive_timestamp: "Naive: timestamp order" };
+
+async function runCampaign() {
+  const trials = Number($("#camp-trials").value);
+  const seed = Number($("#camp-seed").value);
+  const btn = $("#camp-run");
+  btn.disabled = true;
+  $("#camp-out").innerHTML = `<p class="muted">Running ${esc(trials)} trials…</p>`;
+  try {
+    renderCampaign(await api("POST", "/api/campaign", { trials, seed }));
+  } catch (err) {
+    $("#camp-out").innerHTML = `<p class="hint">${esc(err.message)}</p>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderCampaign(r) {
+  const t = r.trials, lossy = r.trials_with_loss, f = r.faults_injected;
+  const pct = (n, d) => (d ? `${((100 * n) / d).toFixed(1)}%` : "n/a");
+  const cls = (ok) => (ok ? "good" : "bad");
+  const rows = Object.entries(r.strategies).map(([name, v]) => `
+    <tr class="${name === "threadline" ? "ours" : ""}">
+      <td>${esc(CAMP_LABEL[name] || name)}</td>
+      <td class="${cls(v.exact === t)}">${pct(v.exact, t)}</td>
+      <td class="${cls(!v.duplicate_replies)}">${v.duplicate_replies}</td>
+      <td class="${cls(!v.order_errors)}">${v.order_errors}</td>
+      <td class="${cls(v.loss_surfaced === lossy)}">${pct(v.loss_surfaced, lossy)}</td>
+      <td class="${cls(!v.false_alarm)}">${v.false_alarm}</td>
+    </tr>`).join("");
+  $("#camp-out").innerHTML = `
+    <p class="camp-faults">${t} trials, seed ${r.seed}. Injected ${f.redeliveries} redeliveries, ${f.retries} adapter retries,
+      ${f.delayed} delayed deliveries and ${f.lost} lost messages (${lossy} trials with loss).</p>
+    <div class="table-wrap"><table class="camp">
+      <thead><tr><th>Strategy</th><th>Exact context</th><th>Duplicate replies</th><th>Order errors</th><th>Loss surfaced</th><th>False alarms</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <p class="camp-proof">Threadline replay deterministic in ${r.threadline_deterministic}/${t} trials; same slots and gaps after a random re-ordering of the log in ${r.threadline_order_invariant}/${t}; median replay ${r.median_replay_ms} ms.</p>`;
+}
+
 // ------------------------------------------------------------------- wiring
 document.addEventListener("click", (ev) => {
   const t = ev.target;
@@ -571,6 +612,7 @@ $("#deliver").onclick = deliver;
 $("#resume").onclick = resume;
 $("#reset").onclick = resetDemo;
 $("#only-notable").onchange = renderDecisions;
+$("#camp-run").onclick = runCampaign;
 
 (async function init() {
   try {

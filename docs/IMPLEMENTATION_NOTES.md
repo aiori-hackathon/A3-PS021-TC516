@@ -96,3 +96,15 @@ Verified on the live URL: every scenario's full operator workflow (run → recov
 
 * Orientation video uploaded: https://youtu.be/4IXSzTUrEOA. Linked from README.md and docs/PRESENTATION.md.
 * Presentation PDF (AIORI proposed structure, 13 slides) committed as `docs/Threadline-AIORI3-PS021.pdf`, with the editable `.pptx`.
+
+## Random fault campaign
+
+| Change | Reason |
+|---|---|
+| `threadline/campaign.py`: seeded random faults (redelivery, adapter retry, network delay, clock skew, loss), each delivery crossing its adapter's wire protocol | PS-021 is *experimental*. Fixed scenarios show what each fault does; the campaign measures how often recovery is right when faults land at random |
+| Two naive baselines (arrival order and timestamp order, deduplicated by `message_id`) recovered from the same logs | The AIORI presentation structure asks for a before/after comparison. Measuring both on identical logs makes the comparison fair |
+| Scoring against ground truth by slot (`sequence` + `idempotency_key`), not by `message_id` | A retry that arrives first is a legitimate copy of the slot. Scoring by id would count it as wrong |
+| `POST /api/campaign` and dashboard panel 4, capped at 2000 trials | Evaluators can run it on the live demo. The cap keeps one request under about 2 s |
+| Uses its own `random.Random(seed)`; `recovery.py` is unchanged | Same seed gives identical numbers; the engine stays pure |
+
+Results and limits are in [EVALUATION.md](EVALUATION.md). Suite: 56 tests (5 campaign tests, 1 API test).

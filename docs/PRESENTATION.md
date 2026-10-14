@@ -1,6 +1,6 @@
 # Presentation outline: Threadline (PS-021 · A3-PS021-TC516)
 
-The submitted deck is [Threadline-AIORI3-PS021.pdf](Threadline-AIORI3-PS021.pdf) (13 slides in the AIORI proposed structure; editable [.pptx](Threadline-AIORI3-PS021.pptx)). This file is the original talk outline.
+The submitted deck is [Threadline-AIORI3-PS021.pdf](Threadline-AIORI3-PS021.pdf) (14 slides in the AIORI proposed structure; editable [.pptx](Threadline-AIORI3-PS021.pptx)). This file is the original talk outline.
 
 10 slides, ~8 minutes + live demo. Speaker notes in *italics*.
 
@@ -46,7 +46,7 @@ Chaos run → replay (gap, blocked) → deliver late → replay → resume → r
 | Split-brain | conflict → HANDOFF_OWNERSHIP | complete, flagged |
 | Chaos | incomplete | complete after deliver + resume |
 
-All recoveries idempotent; replay ≈ 0.2–1 ms for these logs; 50 automated tests.
+All recoveries idempotent; replay ≈ 0.2–1 ms for these logs; 56 automated tests; random fault campaign: 100% exact recovery over 1000 trials vs. 10–18% for naive recovery ([EVALUATION.md](EVALUATION.md)).
 
 **9. Limitations & future work**
 Simulated adapters; scripted resume; single-node SQLite; permanent gaps need an outbox/redelivery path.

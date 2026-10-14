@@ -57,6 +57,16 @@ class Api(unittest.TestCase):
         listing = self.call("GET", "/api/conversations")[1]["conversations"]
         self.assertIn(cid, [c["conversation_id"] for c in listing])
 
+    def test_fault_campaign_over_http(self):
+        status, r = self.call("POST", "/api/campaign", {"trials": 50, "seed": 3})
+        self.assertEqual(status, 200)
+        self.assertEqual((r["trials"], r["seed"]), (50, 3))
+        self.assertEqual(r["strategies"]["threadline"]["exact"], 50)
+        for bad in ({"trials": 0}, {"trials": 99999}, {"trials": "10"}, {"seed": True}):
+            status, err = self.call("POST", "/api/campaign", bad)
+            self.assertEqual(status, 400, bad)
+            self.assertTrue(err["error"]["code"].startswith("invalid_"), bad)
+
     def test_prototype_compatible_interruption_flag(self):
         snap = self.call("POST", "/api/experiments", {"inject_interruption": True})[1]
         self.assertEqual(snap["conversation"]["faults"], ["adapter_timeout"])
