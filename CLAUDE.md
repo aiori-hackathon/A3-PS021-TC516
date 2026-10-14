@@ -21,7 +21,7 @@ Threadline is a dialog correlation and recovery lab for the **AIORI-3 hackathon*
 
 - `aiori-hackathon` has write access as a collaborator. Repository ownership moves to `aiori-hackathon` only after that account is confirmed and every collaborator has accepted their invitation. Do not start a transfer.
 - Submission needs three things: a YouTube orientation video under 10 minutes in which each member covers their role, PS-021 and the solution (script: `docs/DEMO_SCRIPT.md`); the presentation (outline: `docs/PRESENTATION.md`); and the repository URL on the AIORI portal.
-- Orientation video: <https://youtu.be/kQrdWOszweA>. Presentation PDF: `docs/Threadline-AIORI3-PS021.pdf` (source `.pptx` beside it). Never invent names, links or results.
+- Orientation video: <https://youtu.be/4IXSzTUrEOA>. Presentation PDF: `docs/Threadline-AIORI3-PS021.pdf` (source `.pptx` beside it). Never invent names, links or results.
 - Why PS-021: it covers what happens to an AI conversation at system boundaries (delays, loss, duplicates, reordering, timeouts, split-brain). The method is experimental: inject faults on purpose and record where and why recovery succeeds or fails.
 
 ## Commands

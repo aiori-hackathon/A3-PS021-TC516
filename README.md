@@ -2,7 +2,7 @@
 
 **Dialog correlation and recovery across agent adapters**: AIORI-3 hackathon, team **A3-PS021-TC516**, problem statement **PS-021: Experimental Dialog Correlation and Recovery Across Agent Adapters**.
 
-Repository: <https://github.com/yugrajmangate-dev/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/kQrdWOszweA> · Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
+Repository: <https://github.com/yugrajmangate-dev/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/4IXSzTUrEOA> · Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
 
 Threadline keeps one AI conversation consistent while it moves between agent adapters that speak different protocols (a web chat widget, an LLM planner agent, a tool-execution agent). Every message is correlated with a stable `conversation_id`, a unique `message_id`, a `sequence` number, a `causation_id` and a deterministic `idempotency_key`, and every delivery is written to an append-only SQLite event log. When things go wrong (adapter timeouts, interrupted hand-offs, duplicates, delays, lost or out-of-order messages, split-brain conflicts), Threadline **replays the log** to rebuild the context, shows exactly why each event was accepted or rejected, and resumes the dialog from a safe checkpoint.
 
@@ -188,7 +188,7 @@ This is a two-member team. The role labels describe the current division of work
 | Member 2 name | Neha Niphade |
 | GitHub repository URL | <https://github.com/yugrajmangate-dev/A3-PS021-TC516> |
 | Live demo URL | <https://threadline-brown.vercel.app> (temporary demo data) |
-| Orientation video (YouTube) URL | <https://youtu.be/kQrdWOszweA> |
+| Orientation video (YouTube) URL | <https://youtu.be/4IXSzTUrEOA> |
 | Presentation (PDF) | [docs/Threadline-AIORI3-PS021.pdf](docs/Threadline-AIORI3-PS021.pdf) (13 slides, AIORI proposed structure; editable [.pptx](docs/Threadline-AIORI3-PS021.pptx), outline in [docs/PRESENTATION.md](docs/PRESENTATION.md); also on [Google Drive](https://drive.google.com/file/d/15GDJPEnbZWJSGgmcLRYI0Py3Jg0eJ43L/view?usp=drivesdk)) |
 | Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |
 | Neha GitHub username | `Neha-Niphade` (collaborator) |

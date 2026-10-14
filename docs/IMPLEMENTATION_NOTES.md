@@ -94,5 +94,5 @@ Verified on the live URL: every scenario's full operator workflow (run → recov
 
 ## Submission
 
-* Orientation video uploaded: https://youtu.be/kQrdWOszweA. Linked from README.md and docs/PRESENTATION.md.
+* Orientation video uploaded: https://youtu.be/4IXSzTUrEOA. Linked from README.md and docs/PRESENTATION.md.
 * Presentation PDF (AIORI proposed structure, 13 slides) committed as `docs/Threadline-AIORI3-PS021.pdf`, with the editable `.pptx`.

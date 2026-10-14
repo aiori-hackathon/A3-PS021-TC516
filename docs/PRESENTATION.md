@@ -56,7 +56,7 @@ Next: real connectors (WebSocket / LLM HTTP / JSON-RPC-MCP), outbox + redelivery
 - Member 1 (Yugraj Mangate): Backend, API, SQLite persistence, and project coordination
 - Member 2 (Neha Niphade): Agent adapters, correlation, recovery, testing, dashboard, and documentation
 
-GitHub: https://github.com/yugrajmangate-dev/A3-PS021-TC516 · Orientation video: https://youtu.be/kQrdWOszweA · Q&A.
+GitHub: https://github.com/yugrajmangate-dev/A3-PS021-TC516 · Orientation video: https://youtu.be/4IXSzTUrEOA · Q&A.
 
 ### Suggested speaker split
 | Slides | Speaker |
