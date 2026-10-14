@@ -108,3 +108,7 @@ Verified on the live URL: every scenario's full operator workflow (run → recov
 | Uses its own `random.Random(seed)`; `recovery.py` is unchanged | Same seed gives identical numbers; the engine stays pure |
 
 Results and limits are in [EVALUATION.md](EVALUATION.md). Suite: 56 tests (5 campaign tests, 1 API test).
+
+## Ownership transfer
+
+* Ownership moved to `aiori-hackathon` on 2026-10-15. The repository is now https://github.com/aiori-hackathon/A3-PS021-TC516; the old `yugrajmangate-dev` address redirects. Links in README.md and docs/ point to the new address. The Vercel project's automatic GitHub deploys were tied to the old owner, so the live demo is now deployed with `vercel deploy --prod`.

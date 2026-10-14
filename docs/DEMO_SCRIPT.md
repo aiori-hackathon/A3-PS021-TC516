@@ -106,7 +106,7 @@ python -m unittest discover -s tests -t .
 
 > "Limitations: the adapters are simulated in-process, and resume replays a scripted continuation instead of calling a real LLM. Next we want real WebSocket and JSON-RPC connectors, an outbox for automatic redelivery, and seeded random fault injection for statistical evaluation. Thank you. Our code and documentation are on GitHub; the link is in the video description."
 
-*Video description (paste on upload):* `Threadline: AIORI-3, team A3-PS021-TC516, PS-021. Code: https://github.com/yugrajmangate-dev/A3-PS021-TC516`
+*Video description (paste on upload):* `Threadline: AIORI-3, team A3-PS021-TC516, PS-021. Code: https://github.com/aiori-hackathon/A3-PS021-TC516`
 
 ---
 
