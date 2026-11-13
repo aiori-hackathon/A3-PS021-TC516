@@ -4,7 +4,7 @@
 
 **Dialog correlation and recovery across agent adapters**: AIORI-3 hackathon, team **A3-PS021-TC516**, problem statement **PS-021: Experimental Dialog Correlation and Recovery Across Agent Adapters**.
 
-Repository: <https://github.com/aiori-hackathon/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/4IXSzTUrEOA> · Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
+Repository: <https://github.com/aiori-hackathon/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/4IXSzTUrEOA> · prototype video: <https://youtu.be/4IXSzTUrEOA>· Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
 
 ## For evaluators (2 minutes)
 
