@@ -4,7 +4,7 @@
 
 **Dialog correlation and recovery across agent adapters**: AIORI-3 hackathon, team **A3-PS021-TC516**, problem statement **PS-021: Experimental Dialog Correlation and Recovery Across Agent Adapters**.
 
-Repository: <https://github.com/aiori-hackathon/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/4IXSzTUrEOA> · prototype video: <https://youtu.be/4IXSzTUrEOA>· Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
+Repository: <https://github.com/aiori-hackathon/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/4IXSzTUrEOA> · prototype video: <https://youtu.be/V7bsz0AEAmk?si=6g8Esb3OXB-k2HJb>· Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
 
 ## For evaluators (2 minutes)
 
@@ -221,7 +221,7 @@ This is a two-member team. The role labels describe the current division of work
 | Member 2 name | Neha Niphade |
 | GitHub repository URL | <https://github.com/aiori-hackathon/A3-PS021-TC516> |
 | Live demo URL | <https://threadline-brown.vercel.app> (temporary demo data) |
-| Orientation video (YouTube) URL | <https://youtu.be/4IXSzTUrEOA> |
+| Orientation video (YouTube) URL | <https://youtu.be/4IXSzTUrEOA>,<https://youtu.be/V7bsz0AEAmk?si=6g8Esb3OXB-k2HJb> |
 | Presentation (PDF) | [docs/Threadline-AIORI3-PS021.pdf](docs/Threadline-AIORI3-PS021.pdf) (14 slides, AIORI proposed structure; editable [.pptx](docs/Threadline-AIORI3-PS021.pptx), outline in [docs/PRESENTATION.md](docs/PRESENTATION.md); also on [Google Drive](https://drive.google.com/file/d/19Ynhj6n3OldZyBsFA8Yh84paMBQFU-A6/view?usp=sharing)) |
 | Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |
 | Neha GitHub username | `Neha-Niphade` (collaborator) |
