@@ -100,6 +100,26 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .metric .s { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .v.ok { color: var(--ok); } .v.warn { color: var(--warn); } .v.bad { color: var(--bad); } .v.info { color: var(--accent); }
 
+/* Local order recovery */
+.orders { margin-bottom: 16px; }
+.orders [hidden] { display: none; }
+.order-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.order-form label:not(.toggle), .order-list { display: grid; gap: 5px; font-size: 13px; }
+.order-form input:not([type="checkbox"]), .orders select {
+  max-width: 100%; min-height: 36px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--panel-2); color: var(--text); padding: 6px 9px; font: inherit;
+}
+.orders .toggle { min-height: 36px; }
+.order-heading { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.order-heading h3 { margin: 0; }
+.order-list { margin: 16px 0; max-width: 32rem; }
+.order-details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 12px; font-size: 13px; }
+.order-details dt { color: var(--muted); }
+.order-details dd { margin: 0; overflow-wrap: anywhere; }
+#order-events { margin: 12px 0; padding-left: 24px; font-size: 14px; line-height: 1.8; }
+#order-ledger, #order-error, #order-reconcile { margin-top: 12px; }
+#order-ledger { color: var(--text); overflow-wrap: anywhere; }
+
 /* timeline */
 .timeline { overflow-x: auto; padding: 8px 8px 0; }
 .timeline svg { display: block; }

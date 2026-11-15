@@ -112,3 +112,7 @@ Results and limits are in [EVALUATION.md](EVALUATION.md). Suite: 56 tests (5 cam
 ## Ownership transfer
 
 * Ownership moved to `aiori-hackathon` on 2026-10-15. The repository is now https://github.com/aiori-hackathon/A3-PS021-TC516; the old `yugrajmangate-dev` address redirects. Links in README.md and docs/ point to the new address. The Vercel project's automatic GitHub deploys were tied to the old owner, so the live demo is now deployed with `vercel deploy --prod`.
+
+## Regional build (2026-11-15)
+
+Test counts in the passes above were correct when written. The current suite is 66 tests, and `python -m tests.workflow_evidence` reports 5/5 on the dashboard order workflow (`threadline-order-workflow-v1`).

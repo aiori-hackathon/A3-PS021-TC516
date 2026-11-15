@@ -51,10 +51,18 @@ Injected: 1384 redeliveries, 589 adapter retries, 3653 delayed deliveries, 522 l
 | **Threadline** | **100.0%** | **0** | **0** | **100.0%** | **0** |
 | Naive: arrival order | 10.5% | 589 | 1629 | 0.0% | 0 |
 | Naive: timestamp order | 17.6% | 589 | 1733 | 0.0% | 0 |
+| Control: sequence and idempotency key | 100.0% | 0 | 0 | Not measured | Not measured |
 
 Threadline replay was deterministic in 1000/1000 trials and order-invariant in 1000/1000. The median replay time was about 0.08 ms per 9–14 event log.
 
-**Before vs. after, in one line:** deduplicating by `message_id` stops redeliveries but not retries, so every one of the 589 retries became a duplicate reply. Ordering by arrival or by clock put messages out of sequence 1629 and 1733 times. A consumer with no notion of a gap hid every lost message. Threadline's idempotency key, sequence ordering and gap detection remove all three failure modes.
+Deduplicating by `message_id` left the 589 regenerated retries in the output.
+As a stronger control, keeping the first arrival per `idempotency_key` and
+sorting by `sequence` also reproduced all 1,000 delivered slot sequences
+with zero duplicates on the same seed-2026 logs. That control used the same
+metadata. This replay metric does not measure side effects, repair missing
+payloads, or compare Threadline with another durable workflow system. The
+[HTTP receipt experiment](RECEIPT_LAB.md) separately tests the effect of
+receiver-side deduplication by reading the order ledger.
 
 ### Stress run
 

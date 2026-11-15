@@ -10,6 +10,8 @@ data/threadline.db
 data/*.db
 data/*.db-*
 data/*.sqlite*
+data/order-workflow/
+data/pune-demo/
 
 # Temporary browser / headless-verification files
 static/_*.html
@@ -37,3 +39,6 @@ desktop.ini
 # Local Claude Code notes (not part of the submission)
 CLAUDE.md
 .claude/
+
+# Internal handoff notes (names competitors; not part of the submission)
+PROJECT_CONTEXT.md

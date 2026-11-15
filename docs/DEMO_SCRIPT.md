@@ -28,7 +28,7 @@ Rehearse once with a stopwatch. If a run-through exceeds 9:30, shorten the "Solu
 
 ```powershell
 cd C:\AIORI
-python -m unittest discover -s tests -t .     # must end with "OK" (56 tests)
+python -m unittest discover -s tests -t .     # must end with "OK" (66 tests)
 python server.py --fresh                      # clean demo database; leave this window running
 ```
 
@@ -113,7 +113,7 @@ python -m unittest discover -s tests -t .
 ### Recording checklist
 
 - [ ] Yugraj Mangate and Neha Niphade names and roles are filled in above
-- [ ] `python -m unittest discover -s tests -t .` ends with `OK` (56 tests) on the recording machine
+- [ ] `python -m unittest discover -s tests -t .` ends with `OK` (66 tests) on the recording machine
 - [ ] Server started with `python server.py --fresh`; *Recent experiments* is empty at the start
 - [ ] Both members are visible on camera and clearly audible, and cover role, PS-021, the Threadline solution, and their demo part
 - [ ] Final video is under 10 minutes (planned ≈ 8:15)

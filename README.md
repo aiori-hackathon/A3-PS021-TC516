@@ -4,20 +4,47 @@
 
 **Dialog correlation and recovery across agent adapters**: AIORI-3 hackathon, team **A3-PS021-TC516**, problem statement **PS-021: Experimental Dialog Correlation and Recovery Across Agent Adapters**.
 
-Repository: <https://github.com/aiori-hackathon/A3-PS021-TC516> · Live demo: <https://threadline-brown.vercel.app> · Orientation video: <https://youtu.be/4IXSzTUrEOA> · Presentation: [PDF](docs/Threadline-AIORI3-PS021.pdf)
+Repository: <https://github.com/aiori-hackathon/A3-PS021-TC516> · [Pune presentation](docs/Threadline-Pune-Final.pdf) · [Hosted replay lab](https://threadline-brown.vercel.app) · [Orientation video](https://youtu.be/4IXSzTUrEOA) · [Earlier prototype video](https://youtu.be/V7bsz0AEAmk)
 
 ## For evaluators (2 minutes)
 
+```sh
+python3 server.py --orders data/order-workflow --demo-faults
+```
+
+Open **http://127.0.0.1:8080**. Under **Order recovery**, enter an order ID,
+enable **Drop the first reply after commit**, and create a replacement.
+Watch the same task retry, then select **Check order ledger** to verify
+that the separate service has exactly one receipt. The workflow persists
+even if the dashboard server stops. Start with the same data directory to
+resume. [Runbook and architecture](docs/ORDER_WORKFLOW.md).
+
 | | |
 |---|---|
-| **Try it** | Open the [live demo](https://threadline-brown.vercel.app), pick **Chaos (combined)**, click **Run experiment**, then **2 · Replay & recover**. Scroll to **4 · Random fault campaign** and click **Run campaign**. |
-| **Verify locally** | `python -m unittest discover -s tests -t .` (56 tests) · `python -m threadline.bench` (8 scenarios) · `python -m threadline.campaign` (1000 random trials). Python 3.10+, no packages to install. |
-| **Main result** | Over 1000 seeded random fault trials, Threadline rebuilt the exact context in **100%** of trials with **0** duplicate replies and surfaced **every** lost message. Naive recovery on the same logs was exact in 10–18% of trials, leaked 589 duplicate replies and hid every loss. [Details](docs/EVALUATION.md) |
-| **Watch / read** | [Orientation video](https://youtu.be/4IXSzTUrEOA) · [Presentation (PDF)](docs/Threadline-AIORI3-PS021.pdf) · [Architecture](docs/ARCHITECTURE.md) · [Evaluation](docs/EVALUATION.md) |
+| **Compare against a control** | Run `python3 -m threadline.receipt_lab --order 4821 --show-unknown`. The same lost HTTP reply produces **two replacement records** with deduplication off and **one** with the persisted operation key. An uncertain request without a safe retry contract stays in review. |
+| **Verify locally** | `python -m unittest discover -s tests -t .` · `python -m tests.workflow_evidence` (five failure cases on the dashboard workflow) · `python -m threadline.bench` (eight replay scenarios). Python 3.10+, no packages to install. |
+| **Explore the replay lab** | Open the [dashboard](https://threadline-brown.vercel.app) and run **Chaos (combined)** to inspect event ordering and missing context. The [seeded campaign](docs/EVALUATION.md) measures reconstruction of delivered message slots. |
+| **Review the contract** | [Versioned schema and state transitions](docs/SCHEMA.md) · [Mentor demo and pseudocode](docs/MENTOR_DEMO.md) · [Five-case evidence](docs/JURY_EVIDENCE.txt) |
+| **Watch / read** | [Pune jury presentation (PDF)](docs/Threadline-Pune-Final.pdf) · [Editable PPTX](docs/Threadline-Pune-Final.pptx) · [Order workflow](docs/ORDER_WORKFLOW.md) |
 
 Threadline keeps one AI conversation consistent while it moves between agent adapters that speak different protocols (a web chat widget, an LLM planner agent, a tool-execution agent). Every message is correlated with a stable `conversation_id`, a unique `message_id`, a `sequence` number, a `causation_id` and a deterministic `idempotency_key`, and every delivery is written to an append-only SQLite event log. When things go wrong (adapter timeouts, interrupted hand-offs, duplicates, delays, lost or out-of-order messages, split-brain conflicts), Threadline **replays the log** to rebuild the context, shows exactly why each event was accepted or rejected, and resumes the dialog from a safe checkpoint.
 
 ---
+
+## Regional recovery demos
+
+The [HTTP receipt lab](docs/RECEIPT_LAB.md) runs entirely on one laptop. The
+planner saves the handoff and operation key in its own database. A separate
+HTTP order service commits the effect in another database and drops the reply.
+The protected service returns the original receipt after restart and rejects
+reuse of the key for a different order. The CLI also runs a control with
+deduplication disabled.
+
+Run `python3 -m threadline.restart_lab --scenario after_commit` to see a mock
+tool process exit after committing a replacement. A fresh process handles the
+retry and returns the same replacement ID; the database still has one effect.
+Omit the scenario flag to run all five cases. See [the experimental schema and
+test matrix](docs/RESTART_LAB.md).
 
 ## Quick start
 
@@ -47,7 +74,8 @@ The default event log is `data/threadline.db` (created automatically, ignored by
 python -m unittest discover -s tests -t . -v
 ```
 
-56 tests cover the recovery engine, the envelope and idempotency rules, adapter protocol round-trips, the append-only store, every scenario end-to-end, the random fault campaign, and the HTTP API.
+The tests cover replay, adapter codecs, the event store, the fault campaign,
+the dashboard API, and both regional recovery demos.
 
 ### Run the experiment table (no browser needed)
 
@@ -116,7 +144,11 @@ The fixed scenarios show what each fault does. The campaign measures how often r
 | Naive: arrival order, dedupe by `message_id` | 10.5% | 589 | 1629 | 0.0% |
 | Naive: timestamp order, dedupe by `message_id` | 17.6% | 589 | 1733 | 0.0% |
 
-Threadline's replay was deterministic and order-invariant in 1000/1000 trials (median 0.08 ms per log). A stress run with 50% retries and 20% loss gives the same Threadline result. Method, stress run and what the campaign does *not* cover: [docs/EVALUATION.md](docs/EVALUATION.md).
+“Exact context” counts only delivered message slots. A control that uses the
+same idempotency keys and sequence numbers also reconstructs 1000/1000
+delivered sequences. This campaign measures replay behavior. The HTTP receipt
+lab separately measures whether a retry creates a second effect.
+[Method, controls and limitations](docs/EVALUATION.md).
 
 ## Status vocabulary
 
@@ -221,8 +253,8 @@ This is a two-member team. The role labels describe the current division of work
 | Member 2 name | Neha Niphade |
 | GitHub repository URL | <https://github.com/aiori-hackathon/A3-PS021-TC516> |
 | Live demo URL | <https://threadline-brown.vercel.app> (temporary demo data) |
-| Orientation video (YouTube) URL | <https://youtu.be/4IXSzTUrEOA> |
-| Presentation (PDF) | [docs/Threadline-AIORI3-PS021.pdf](docs/Threadline-AIORI3-PS021.pdf) (14 slides, AIORI proposed structure; editable [.pptx](docs/Threadline-AIORI3-PS021.pptx), outline in [docs/PRESENTATION.md](docs/PRESENTATION.md); also on [Google Drive](https://drive.google.com/file/d/19Ynhj6n3OldZyBsFA8Yh84paMBQFU-A6/view?usp=sharing)) |
+| Videos | [Orientation](https://youtu.be/4IXSzTUrEOA) · [Earlier prototype](https://youtu.be/V7bsz0AEAmk) |
+| Presentations | [Pune regional PDF](docs/Threadline-Pune-Final.pdf) · [Pune PPTX](docs/Threadline-Pune-Final.pptx) · [Original online-round PDF](docs/Threadline-AIORI3-PS021.pdf) |
 | Orientation video script | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) (under 10 minutes, both members) |
 | Neha GitHub username | `Neha-Niphade` (collaborator) |
 

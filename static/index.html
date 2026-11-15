@@ -20,6 +20,42 @@
     </div>
   </header>
 
+  <section class="panel orders" id="order-workflow" hidden>
+    <div class="panel-head"><h2>Order recovery</h2></div>
+    <div class="pad">
+      <form id="order-submit" class="order-form">
+        <label>Mock order ID <input name="order_id" required maxlength="64" pattern="[A-Za-z0-9\-]+" placeholder="4821"></label>
+        <label>Recovery policy
+          <select name="policy">
+            <option value="protected">Retry with the saved key</option>
+            <option value="review">Hold uncertain outcomes for review</option>
+          </select>
+        </label>
+        <label class="toggle" id="order-fault" hidden><input name="drop_reply" type="checkbox"> Drop the first reply after commit</label>
+        <button class="primary">Create replacement</button>
+      </form>
+      <p id="order-error" class="notice err" role="alert" hidden></p>
+      <label class="order-list" id="order-history" hidden>Recent tasks <select id="order-recent"></select></label>
+      <article id="order-task" hidden>
+        <div class="order-heading"><h3 id="order-title"></h3><span class="pill" id="order-state"></span></div>
+        <dl class="order-details">
+          <dt>Dialog ID</dt><dd><code id="order-dialog"></code></dd>
+          <dt>Task ID</dt><dd><code id="order-id"></code></dd>
+          <dt>Operation key</dt><dd><code id="order-key"></code></dd>
+          <dt>Attempts</dt><dd id="order-attempts"></dd>
+          <dt>Receipt</dt><dd><code id="order-receipt"></code></dd>
+        </dl>
+        <ol id="order-events"></ol>
+        <button type="button" id="order-evidence">Check order ledger</button>
+        <p id="order-ledger" role="status" hidden></p>
+        <form id="order-reconcile" class="order-form" hidden>
+          <label>Receipt from the ledger <input name="receipt_id" required pattern="RPL-[a-f0-9]{10}" placeholder="RPL-…"></label>
+          <button>Verify and complete task</button>
+        </form>
+      </article>
+    </div>
+  </section>
+
   <div class="layout">
     <!-- ============ Left: experiment setup ============ -->
     <aside class="side">
@@ -118,5 +154,6 @@
   </div>
 </main>
 <script src="/app.js"></script>
+<script src="/orders.js"></script>
 </body>
 </html>

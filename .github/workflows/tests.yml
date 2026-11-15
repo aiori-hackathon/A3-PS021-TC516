@@ -17,6 +17,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Unit and API tests
         run: python -m unittest discover -s tests -t . -v
+      - name: PS-021 five-case evidence
+        run: python -m tests.workflow_evidence
+      - name: Lost HTTP reply with and without protection
+        run: python -m threadline.receipt_lab --show-unknown
       - name: Scenario benchmark
         run: python -m threadline.bench
       - name: Random fault campaign

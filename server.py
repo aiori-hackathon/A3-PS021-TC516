@@ -10,12 +10,17 @@ import json
 import mimetypes
 import os
 import re
+import secrets
 import sys
 import traceback
+from contextlib import ExitStack, contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import urlparse
 
 from threadline import __version__, campaign
+from threadline.order_workflow import OrderWorkflow
+from threadline.receipt_lab import effect_service
 from threadline.service import ApiError, Threadline
 from threadline.store import EventStore
 
@@ -28,7 +33,7 @@ CONTENT_TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; c
 CONV = r"/api/conversations/(?P<cid>[A-Za-z0-9_.:-]{1,80})"
 
 
-def make_handler(app):
+def make_handler(app, order_workflow=None):
     """Build a request handler bound to one Threadline instance."""
 
     routes = [
@@ -45,6 +50,15 @@ def make_handler(app):
         ("POST", r"/api/reset", lambda m, b: reset()),
         ("POST", r"/api/campaign", lambda m, b: run_campaign(b)),
     ]
+    if order_workflow is not None:
+        task = r"/api/order-tasks/(?P<task_id>[a-f0-9-]{36})"
+        routes.extend([
+            ("GET", r"/api/order-tasks", lambda m, b: order_workflow.list_tasks()),
+            ("POST", r"/api/order-tasks", lambda m, b: order_workflow.submit(b)),
+            ("GET", task, lambda m, b: order_workflow.get(m["task_id"])),
+            ("GET", task + r"/evidence", lambda m, b: order_workflow.evidence(m["task_id"])),
+            ("POST", task + r"/reconcile", lambda m, b: order_workflow.reconcile(m["task_id"], b)),
+        ])
     compiled = [(verb, re.compile(pattern + r"/?$"), fn) for verb, pattern, fn in routes]
 
     def run_experiment(body):
@@ -86,6 +100,8 @@ def make_handler(app):
                 size = int(self.headers.get("Content-Length") or 0)
             except ValueError:
                 raise ApiError(400, "invalid_length", "Content-Length must be an integer.")
+            if size < 0:
+                raise ApiError(400, "invalid_length", "Content-Length cannot be negative.")
             if size > MAX_BODY:
                 raise ApiError(413, "body_too_large", f"Body exceeds {MAX_BODY} bytes.")
             raw = self.rfile.read(size) if size else b""
@@ -113,6 +129,15 @@ def make_handler(app):
             path = urlparse(self.path).path
             self.body_read = False
             try:
+                if path.startswith("/api/order-tasks") and order_workflow is not None:
+                    host = self.headers.get("Host", "")
+                    if not re.fullmatch(r"(?:localhost|127\.0\.0\.1)(?::[0-9]{1,5})?", host):
+                        raise ApiError(403, "invalid_host", "Open the workflow on localhost.")
+                    origin = self.headers.get("Origin")
+                    if origin is not None and origin != "http://" + host:
+                        raise ApiError(403, "cross_origin", "Order tasks require a same-origin request.")
+                    if verb == "POST" and self.headers.get_content_type() != "application/json":
+                        raise ApiError(415, "json_required", "Order tasks require application/json.")
                 if not path.startswith("/api/"):
                     if verb == "GET":
                         return self.serve_static(path)
@@ -185,11 +210,32 @@ def make_handler(app):
     return Handler
 
 
-def create_server(host="127.0.0.1", port=8080, db=":memory:"):
+def create_server(host="127.0.0.1", port=8080, db=":memory:", order_workflow=None):
+    if order_workflow is not None and host != "127.0.0.1":
+        raise ValueError("The order workflow requires the loopback address.")
     if db != ":memory:":
         os.makedirs(os.path.dirname(os.path.abspath(db)), exist_ok=True)
     app = Threadline(EventStore(db))
-    return ThreadingHTTPServer((host, port), make_handler(app)), app
+    return ThreadingHTTPServer((host, port), make_handler(app, order_workflow)), app
+
+
+@contextmanager
+def lock_orders(directory):
+    with (directory / ".operator.lock").open("a+b") as lock:
+        if os.name == "nt":
+            import msvcrt
+            if lock.tell() == 0:
+                lock.write(b"0")
+                lock.flush()
+            lock.seek(0)
+            try:
+                msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+            except OSError as exc:
+                raise BlockingIOError("order workflow directory in use") from exc
+        else:
+            import fcntl
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        yield
 
 
 def main(argv=None):
@@ -199,16 +245,44 @@ def main(argv=None):
     parser.add_argument("--db", default=os.environ.get("THREADLINE_DB", os.path.join(ROOT, "data", "threadline.db")),
                         help="SQLite file for the event log (':memory:' for a throwaway run)")
     parser.add_argument("--fresh", action="store_true", help="delete all demo data in the event log before starting")
+    parser.add_argument("--orders", type=Path, help="directory for the local durable order workflow")
+    parser.add_argument("--demo-faults", action="store_true", help="enable dropped replies for local order tasks")
     args = parser.parse_args(argv)
-    httpd, app = create_server(args.host, args.port, args.db)
-    if args.fresh:
-        app.store.reset()
-    print(f"Threadline {__version__} listening on http://localhost:{args.port}  (event log: {args.db})", flush=True)
-    print("Press Ctrl+C to stop.", flush=True)
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\nstopped")
+    if args.orders is not None and args.host != "127.0.0.1":
+        parser.error("--orders requires --host 127.0.0.1")
+    if args.demo_faults and args.orders is None:
+        parser.error("--demo-faults requires --orders")
+    with ExitStack() as stack:
+        workflow = None
+        if args.orders is not None:
+            args.orders.mkdir(parents=True, exist_ok=True)
+            if args.db != ":memory:" and Path(args.db).resolve() in {
+                (args.orders / "orders.sqlite").resolve(), (args.orders / "planner.sqlite").resolve()
+            }:
+                parser.error("Use different SQLite files for replay, planner and order ledger.")
+            token = secrets.token_urlsafe(32)
+            try:
+                stack.enter_context(lock_orders(args.orders))
+            except BlockingIOError:
+                parser.error("An order workflow already uses this data directory.")
+            if (args.orders / "planner.sqlite").exists() != (args.orders / "orders.sqlite").exists():
+                parser.error("Planner and order ledger must be restored together. One database is missing.")
+            port, _ = stack.enter_context(effect_service(args.orders / "orders.sqlite", protect=True, token=token))
+            workflow = OrderWorkflow(args.orders / "planner.sqlite", port, token, demo_faults=args.demo_faults)
+        httpd, app = create_server(args.host, args.port, args.db, workflow)
+        stack.enter_context(httpd)
+        if args.fresh:
+            app.store.reset()
+        if workflow is not None:
+            stack.enter_context(workflow.worker())
+        print(f"Threadline {__version__} listening on http://127.0.0.1:{httpd.server_port}  (event log: {args.db})"
+              if args.host == "127.0.0.1" else
+              f"Threadline {__version__} listening on port {httpd.server_port}  (event log: {args.db})", flush=True)
+        print("Press Ctrl+C to stop.", flush=True)
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nstopped")
 
 
 if __name__ == "__main__":

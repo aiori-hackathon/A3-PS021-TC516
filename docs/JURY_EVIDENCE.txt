@@ -1,0 +1,8 @@
+Threadline dashboard workflow | two SQLite databases and a loopback HTTP receiver
+Case                               Same identity  Ledger rows  Attempts  Result
+planner_exits_before_dispatch      true           1            1         PASS
+receiver_unavailable_before_send   true           1            2         PASS
+reply_lost_after_commit            true           1            2         PASS
+overlapping_expired_attempt        true           1            2         PASS
+planner_exits_before_ack           true           1            2         PASS
+5/5 passed.
