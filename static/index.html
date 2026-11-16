@@ -23,6 +23,7 @@
   <section class="panel orders" id="order-workflow" hidden>
     <div class="panel-head"><h2>Order recovery</h2></div>
     <div class="pad">
+      <p class="muted">Step 1 · Normal run: enter a mock order ID and create a replacement.</p>
       <form id="order-submit" class="order-form">
         <label>Mock order ID <input name="order_id" required maxlength="64" pattern="[A-Za-z0-9\-]+" placeholder="4821"></label>
         <label>Recovery policy
@@ -31,7 +32,7 @@
             <option value="review">Hold uncertain outcomes for review</option>
           </select>
         </label>
-        <label class="toggle" id="order-fault" hidden><input name="drop_reply" type="checkbox"> Drop the first reply after commit</label>
+        <label class="toggle" id="order-fault" hidden><input name="drop_reply" type="checkbox"> Step 2 · Break it: drop the first reply after commit</label>
         <button class="primary">Create replacement</button>
       </form>
       <p id="order-error" class="notice err" role="alert" hidden></p>
@@ -46,6 +47,7 @@
           <dt>Receipt</dt><dd><code id="order-receipt"></code></dd>
         </dl>
         <ol id="order-events"></ol>
+        <p class="muted">Step 3 · Recover and verify: the same task retries with the same key, then check the order ledger.</p>
         <button type="button" id="order-evidence">Check order ledger</button>
         <p id="order-ledger" role="status" hidden></p>
         <form id="order-reconcile" class="order-form" hidden>
